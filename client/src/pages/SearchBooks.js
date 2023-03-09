@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Jumbotron,
-  Container,
-  Col,
-  Form,
-  Button,
-  Card,
-  CardColumns,
-} from "react-bootstrap";
+import { Container, Col, Form, Button, Card } from "react-bootstrap";
 
 import Auth from "../utils/auth";
-import { getSavedBookIds, saveBookIds } from "../utils/localStorage";
+import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 import { saveBook, searchGoogleBooks } from "../utils/API";
 // import { saveBook, searchGoogleBooks } from '../utils/API';
 // import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
@@ -26,7 +18,7 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
-  const [saveBook] = useMutation(SAVE_BOOK);
+  const [saveBook, { error, data }] = useMutation(SAVE_BOOK);
 
   //TODO: useMutation(SAVE_BOOK)
 
@@ -92,7 +84,7 @@ const SearchBooks = () => {
       });
 
       // if book successfully saves to user's account, save book id to state
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      setSavedBookIds([...savedBookIds, data.saveBook.savedBooks[0].bookId]);
     } catch (err) {
       console.error(err);
     }
@@ -100,7 +92,7 @@ const SearchBooks = () => {
 
   return (
     <>
-      <Jumbotron fluid className="text-light bg-dark">
+      <Container fluid className="text-light bg-dark">
         <Container>
           <h1>Search for Books!</h1>
           <Form onSubmit={handleFormSubmit}>
@@ -123,7 +115,7 @@ const SearchBooks = () => {
             </Form.Row>
           </Form>
         </Container>
-      </Jumbotron>
+      </Container>
 
       <Container>
         <h2>
@@ -131,7 +123,7 @@ const SearchBooks = () => {
             ? `Viewing ${searchedBooks.length} results:`
             : "Search for a book to begin"}
         </h2>
-        <CardColumns>
+        <Container>
           {searchedBooks.map((book) => {
             return (
               <Card key={book.bookId} border="dark">
@@ -165,10 +157,9 @@ const SearchBooks = () => {
               </Card>
             );
           })}
-        </CardColumns>
+        </Container>
       </Container>
     </>
   );
 };
-
 export default SearchBooks;

@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  Jumbotron,
-  Container,
-  CardColumns,
-  Card,
-  Button,
-} from "react-bootstrap";
+import { Container, Card, Button } from "react-bootstrap";
 
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, useApolloClient } from "@apollo/client";
 import { REMOVE_BOOK } from "../utils/mutations";
 import { GET_ME } from "../utils/queries";
 //import { getMe, deleteBook } from '../utils/API';
@@ -17,6 +11,7 @@ import { removeBookId } from "../utils/localStorage";
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
   const [removeBook] = useMutation(REMOVE_BOOK);
+  const client = useApolloClient();
   const userData = data?.me || {};
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -33,6 +28,16 @@ const SavedBooks = () => {
       });
 
       removeBookId(bookId);
+
+      if (data?.removeBook) {
+        const newUserData = { ...userData };
+        newUserData.savedBooks = newUserData.savedBooks.filter((savedBook) =>
+          client.writeQuery({
+            query: GET_ME,
+            data: { me: newUserData },
+          })
+        );
+      }
     } catch (err) {
       console.error(err);
     }
@@ -103,11 +108,11 @@ const SavedBooks = () => {
 
   return (
     <>
-      <Jumbotron fluid className="text-light bg-dark">
+      <Container fluid className="text-light bg-dark">
         <Container>
           <h1>Viewing saved books!</h1>
         </Container>
-      </Jumbotron>
+      </Container>
       <Container>
         <h2>
           {userData.savedBooks.length
@@ -116,7 +121,7 @@ const SavedBooks = () => {
               }:`
             : "You have no saved books!"}
         </h2>
-        <CardColumns>
+        <Container>
           {userData.savedBooks.map((book) => {
             return (
               <Card key={book.bookId} border="dark">
@@ -141,7 +146,7 @@ const SavedBooks = () => {
               </Card>
             );
           })}
-        </CardColumns>
+        </Container>
       </Container>
     </>
   );
