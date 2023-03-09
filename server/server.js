@@ -1,14 +1,24 @@
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
+const { expressMiddleware } = require("@apollo/server/express4");
 const path = require("path");
-const { typeDefs, resolvers } = require("./schemas");
+const {
+  ApolloServerPluginDrainHttpServer,
+} = require("@apollo/server/plugin/drainHttpServer");
+const http = require("http");
+
+// Import the two parts of a GraphQL schema
+const { typeDefs, resolvers } = require("./schemas"); // add context??
 const db = require("./config/connection");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+const httpServer = http.createServer(app);
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
 app.use(express.urlencoded({ extended: false }));
@@ -25,7 +35,12 @@ app.get("/", (req, res) => {
 // Create a new instance of an Apollo server with the GraphQL schema
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
-  server.applyMiddleware({ app });
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: async ({ req }) => ({ token: req.headers.token }),
+    })
+  );
 
   db.once("open", () => {
     app.listen(PORT, () => {
