@@ -5,8 +5,6 @@ import {
   CardColumns,
   Card,
   Button,
-  Row,
-  Col,
 } from "react-bootstrap";
 
 import { useMutation, useQuery } from "@apollo/client";

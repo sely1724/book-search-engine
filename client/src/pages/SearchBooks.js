@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 
 import Auth from "../utils/auth";
+import { getSavedBookIds, saveBookIds } from "../utils/localStorage";
 // import { saveBook, searchGoogleBooks } from '../utils/API';
 // import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import { SAVE_BOOK } from "../utils/mutations";
@@ -24,7 +25,7 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
-  const [saveBook, { error, data }] = useMutation(SAVE_BOOK);
+  const [saveBook, { error }] = useMutation(SAVE_BOOK);
 
   //TODO: useMutation(SAVE_BOOK)
 
@@ -43,8 +44,10 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await searchGoogleBooks(searchInput);
-
+      //const response = await searchGoogleBooks(searchInput);
+      const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=${searchInput}`
+      );
       if (!response.ok) {
         throw new Error("something went wrong!");
       }
