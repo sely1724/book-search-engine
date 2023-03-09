@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Jumbotron,
   Container,
@@ -40,7 +40,7 @@ const SavedBooks = () => {
 
   // if data isn't here yet, say so
   if (loading) {
-    return <h2>LOADING...</h2>;
+    return <h2>LOADING</h2>;
   }
   // TODO: get book? FIND WHY API calls it "getMe" - who is me?
   // or is it get use?
