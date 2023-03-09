@@ -1,20 +1,22 @@
-const { AuthenticationError } = require("apollo-server-express");
+//const { AuthenticationError } = require("apollo-server-express");
 const { GraphQLError } = require("graphql");
 const { User } = require("../models");
 const { signToken } = require("../utils/auth");
 
 const resolvers = {
-  me: async (parent, args, context) => {
-    if (context.user) {
-      return User.findById(context.user._id)
-        .select("-__v -password")
-        .populate("savedBooks");
-    }
-    throw new GraphQLError("You need to be logged in!", {
-      extensions: {
-        code: "UNAUTHENTICATED",
-      },
-    });
+  Query: {
+    me: async (parent, args, context) => {
+      if (context.user) {
+        return User.findOne({ _id: context.user._id })
+          .select("-__v -password")
+          .populate("books");
+      }
+      throw new GraphQLError("You need to be logged in!", {
+        extensions: {
+          code: "UNAUTHENTICATED",
+        },
+      });
+    },
   },
 
   Mutation: {

@@ -11,6 +11,7 @@ const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: "", password: "" });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [loginUser] = useMutation(LOGIN_USER);
 
   // TODO: ADD IN LOGIN hook here.
 
@@ -30,16 +31,12 @@ const LoginForm = () => {
     }
 
     try {
-      // TODO: need to change for MERN
-      //const response = await loginUser(userFormData);
-      // if (!response.ok) {
-      //   throw new Error("something went wrong!");
-      // }
-      // const { token, user } = await response.json();
-      // console.log(user);
-      // Auth.login(token);
+      const { data } = await loginUser({
+        variables: { ...userFormData },
+      });
+
+      Auth.login(data.login.token);
     } catch (err) {
-      // this should still be okay?
       console.error(err);
       setShowAlert(true);
     }

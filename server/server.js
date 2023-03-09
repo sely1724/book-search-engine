@@ -1,10 +1,11 @@
 const express = require("express");
-const { ApolloServer } = require("apollo-server-express");
+const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const path = require("path");
-const {
-  ApolloServerPluginDrainHttpServer,
-} = require("@apollo/server/plugin/drainHttpServer");
+const { authMiddleware } = require("./utils/auth");
+// const {
+//   ApolloServerPluginDrainHttpServer,
+// } = require("@apollo/server/plugin/drainHttpServer");
 const http = require("http");
 
 // Import the two parts of a GraphQL schema
@@ -18,7 +19,7 @@ const httpServer = http.createServer(app);
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  context: authMiddleware,
 });
 
 app.use(express.urlencoded({ extended: false }));
@@ -43,11 +44,9 @@ const startApolloServer = async (typeDefs, resolvers) => {
   );
 
   db.once("open", () => {
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
-      console.log(
-        `Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`
-      );
+      console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
     });
   });
 };
