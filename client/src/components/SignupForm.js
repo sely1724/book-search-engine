@@ -19,7 +19,7 @@ const SignupForm = () => {
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
-  const [addUser, { error }] = useMutation(ADD_USER);
+  const [addUser, { error, data }] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -38,7 +38,7 @@ const SignupForm = () => {
 
     try {
       const { data } = await addUser({
-        variables: userFormData,
+        variables: { ...userFormData },
       });
 
       Auth.login(data.addUser.token);
@@ -55,7 +55,7 @@ const SignupForm = () => {
   };
 
   return (
-    <>
+    <div>
       {/* This is needed for the validation functionality above */}
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
         {/* show alert if server response is bad */}
@@ -126,7 +126,7 @@ const SignupForm = () => {
           Submit
         </Button>
       </Form>
-    </>
+    </div>
   );
 };
 

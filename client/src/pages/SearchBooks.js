@@ -4,7 +4,6 @@ import { Container, Col, Form, Button, Card } from "react-bootstrap";
 import Auth from "../utils/auth";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 import { saveBook, searchGoogleBooks } from "../utils/API";
-// import { saveBook, searchGoogleBooks } from '../utils/API';
 // import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import { SAVE_BOOK } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
@@ -17,8 +16,7 @@ const SearchBooks = () => {
 
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
-
-  const [saveBook, { error, data }] = useMutation(SAVE_BOOK);
+  const [saveBook] = useMutation(SAVE_BOOK);
 
   //TODO: useMutation(SAVE_BOOK)
 
@@ -91,7 +89,7 @@ const SearchBooks = () => {
   };
 
   return (
-    <>
+    <div>
       <Container fluid className="text-light bg-dark">
         <Container>
           <h1>Search for Books!</h1>
@@ -159,7 +157,7 @@ const SearchBooks = () => {
           })}
         </Container>
       </Container>
-    </>
+    </div>
   );
 };
 export default SearchBooks;

@@ -9,7 +9,6 @@ const resolvers = {
     me: async (parent, args, context) => {
       if (context.user) {
         return User.findOne({ _id: context.user._id }).select("-__v -password");
-        // .populate("books");
       }
       throw new GraphQLError("You need to be logged in!", {
         extensions: {
@@ -26,7 +25,7 @@ const resolvers = {
       return { token, user };
     },
 
-    login: async (parent, { email, password }) => {
+    loginUser: async (parent, { email, password }) => {
       const user = await User.findOne({ email }); // is email what we want? Copied from activity 26
 
       if (!user) {
@@ -56,7 +55,7 @@ const resolvers = {
           { _id: context.user._id },
           { $addToSet: { savedBooks: book } },
           { new: true, runValidators: true }
-        ).populate("savedBooks");
+        );
         return updateUser;
       }
       throw new GraphQLError("You need to be logged in before saving books", {
@@ -69,12 +68,12 @@ const resolvers = {
     removeBook: async (parent, args, context) => {
       // to do add all dependencies
       if (context.user) {
-        const updateUser = await User.findOneAndUpdate(
+        const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
           { $pull: { savedBooks: { bookId: args.bookId } } },
           { new: true }
         );
-        return updateUser;
+        return updatedUser;
       }
       throw new GraphQLError("You need to be logged in!", {
         extensions: {

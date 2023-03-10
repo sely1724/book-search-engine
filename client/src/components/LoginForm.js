@@ -11,15 +11,14 @@ const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: "", password: "" });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [loginUser, { error }] = useMutation(LOGIN_USER);
-
-  // TODO: ADD IN LOGIN hook here.
+  const [loginUser, { error, data }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
 
+  // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -49,7 +48,7 @@ const LoginForm = () => {
   };
 
   return (
-    <>
+    <div>
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
         <Alert
           dismissible
@@ -96,7 +95,7 @@ const LoginForm = () => {
           Submit
         </Button>
       </Form>
-    </>
+    </div>
   );
 };
 

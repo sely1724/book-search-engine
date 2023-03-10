@@ -15,7 +15,7 @@ const typeDefs = `#graphql
     bookId: String!
     authors: [String]
     description: String
-    title: String
+    title: String!
     image: String
     link: String
   }
@@ -26,7 +26,7 @@ const typeDefs = `#graphql
   }
 
   type Mutation {
-    login(email: String!, password: String!): Auth
+    loginUser(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
     saveBook(
       authors: [String]!
