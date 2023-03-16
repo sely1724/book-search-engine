@@ -1,10 +1,8 @@
 // see SignupForm.js for comments
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-// import useMutation react hook -> to use instead of API login
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "../utils/mutations";
-//import { loginUser } from "../utils/API";
 import Auth from "../utils/auth";
 
 const LoginForm = () => {
@@ -62,7 +60,7 @@ const LoginForm = () => {
           <Form.Label htmlFor="email">Email</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Your email"
+            placeholder="email"
             name="email"
             onChange={handleInputChange}
             value={userFormData.email}
@@ -77,7 +75,7 @@ const LoginForm = () => {
           <Form.Label htmlFor="password">Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Your password"
+            placeholder="password"
             name="password"
             onChange={handleInputChange}
             value={userFormData.password}
